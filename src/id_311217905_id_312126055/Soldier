@@ -1,0 +1,24 @@
+package id_311217905_id_312126055;
+
+public class Soldier extends Voter {
+	public boolean carryWeapon;
+
+	public Soldier(String name, long id, String birthYear) throws Exception {
+		super(name, id, birthYear);
+		setWeapon();
+		setMilitaryVoter();
+	}
+
+	private void setWeapon() {
+		this.carryWeapon = r.nextBoolean();
+	}
+
+	public void setMilitaryVoter() {
+		fMilitaryVoter = true;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + (this.carryWeapon ? ", Carrying a weapon" : ", No firearm");
+	}
+}
