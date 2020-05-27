@@ -1,20 +1,12 @@
 package id_311217905_id_312126055;
 
-import java.util.ArrayList;
-
 public class Contender extends Voter {
-	private Party myParty;
+	private Party<Citizen> myParty;
 	private int numOfVotesForContender;
 
-	public Contender(Contender contender) throws Exception {
-		super(contender.name, contender.id, contender.birthYear, contender.myPollingStation);
-		this.myParty = contender.myParty;
-	}
-
-	public Contender(String nameC, long idC, String birthYearC, ArrayList<PollingStation> allPollingStations,
-			Party myParty2) throws Exception {
-		super(nameC, idC, birthYearC, allPollingStations);
-		this.myParty = new Party(myParty2);
+	public Contender(String name, long id, String birthYear, Party<Citizen> p) throws Exception {
+		super(name, id, birthYear);
+		this.myParty = (Party<Citizen>) p;
 	}
 
 	public void makeAVote() {
@@ -25,16 +17,19 @@ public class Contender extends Voter {
 		return numOfVotesForContender;
 	}
 
-	public Party getMyParty() {
+	public Party<Citizen> getMyParty() {
 		return myParty;
 	}
 
 	@Override
 	public String toString() {
-		return "Contender name: " + name + ", id: " + id + ", birthYear: " + birthYear + ", my party is: "
-				+ myParty.getNameOfParty() + ", the numOfVotes: " + numOfVotesForContender + ".\n";
+		return super.toString() + ", my party is: " + getMyPartyName();
 	}
-	
+
+	public String getMyPartyName() {
+		return myParty.nameOfParty;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
