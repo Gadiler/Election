@@ -1,0 +1,98 @@
+package id_311217905_id_312126055;
+
+import java.util.ArrayList;
+import interfaces.BubbleSort;
+import interfaces.ComparVotersByID;
+
+public class BallotBox<T extends Citizen> implements Cloneable {
+	protected final static int LIMITED_YEAR = 2002;
+	public static int numOfBallotBox = 100;
+	protected int BallotBoxID;
+	protected String address;
+	protected ArrayList<Citizen> ourVoters;
+	protected double numOfVoters;
+	protected double percentOfVoters;
+
+	public BallotBox(String address) {
+		setAddress(address);
+		this.BallotBoxID = ++numOfBallotBox;
+		ourVoters = new ArrayList<Citizen>();
+	}
+
+	public BallotBox(BallotBox<T> myBallotBox) {
+		this(myBallotBox.address);
+	}
+
+	public boolean setVoter(Citizen voter) throws CloneNotSupportedException {
+		ourVoters.add(voter);
+		numOfVoters++;
+		return true;
+	}
+
+	public void setAVoteInBallotBox(Voter voter, int partyIndex, int contenderIndex) throws Exception {
+		Election.allParties.get(partyIndex - 1).makeAVoteForOurParty(voter, contenderIndex);
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public void setPercentOfVoters() {
+		this.percentOfVoters = (numOfVoters / ourVoters.size()) * 100;
+	}
+
+	public int getBallotBoxID() {
+		return BallotBoxID;
+	}
+
+	public double getPercentOfVoters() {
+		return percentOfVoters;
+	}
+
+	@Override
+	public BallotBox<?> clone() throws CloneNotSupportedException {
+		BallotBox<?> temp = (BallotBox<?>) super.clone();
+		return temp;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("\n###Ballot-Box address: " + getAddress() + "\n");//
+		sb.append(((int) numOfVoters > 0) ? "Our voters:\n" : "There are no votes in here!\n");
+		BubbleSort.bubbleSort(ourVoters, new ComparVotersByID());
+		for (int i = 0; i < ourVoters.size(); i++) {
+			sb.append((i + 1) + ") " + ourVoters.get(i).toString() + "\n");
+		}
+
+		setPercentOfVoters();
+		sb.append("The number of voters is: -" + (int) numOfVoters + "-\n" + "The percent of voters is: "
+				+ getPercentOfVoters());
+		return sb.toString() + "\n";
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BallotBox<?> other = (BallotBox<?>) obj;
+		if (address == null) {
+			if (address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (!ourVoters.equals(other.ourVoters))
+			return false;
+		if (Double.doubleToLongBits(percentOfVoters) != Double.doubleToLongBits(other.percentOfVoters))
+			return false;
+		return true;
+	}
+
+}
