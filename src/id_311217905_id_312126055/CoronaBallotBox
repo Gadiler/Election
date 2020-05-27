@@ -1,0 +1,33 @@
+package id_311217905_id_312126055;
+
+public class CoronaBallotBox<T extends Voter> extends BallotBox<T> {
+
+	public CoronaBallotBox(String address) {
+		super(address);
+	}
+
+	public CoronaBallotBox(CoronaBallotBox<T> coronaBallotBox) {
+		super(coronaBallotBox);
+	}
+
+	public void setAVoteInCoronaBallotBox(Voter voter, int indexOfParty) throws Exception {
+		if (voter.fInsulation.equals(true)) {
+			Election.allParties.get(indexOfParty - 1).makeAVoteForOurParty(voter, indexOfParty);
+			numOfVoters++;
+		} else {
+			throw new Exception(
+					"setAVoteInCoronaBallotBox Exception: The voter insulation mode is: " + voter.fInsulation);
+		}
+
+	}
+
+	public void setCoronaVoter(T voter) {
+		ourVoters.add(voter);
+		numOfVoters++;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Type of Ballot-Box: Corona Ballot-Box\n";
+	}
+}
