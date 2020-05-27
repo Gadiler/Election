@@ -1,0 +1,16 @@
+package id_311217905_id_312126055;
+
+import interfaces.Sickable;
+
+public class SickSoldier extends Soldier implements Sickable {
+
+	public SickSoldier(String name, long id, String birthYear) throws Exception {
+		super(name, id, birthYear);
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + (dayCount4Insulation == 0 ? ", Last day and i'm free!"
+				: ", more " + dayCount4Insulation + " days to end the insulation.");
+	}
+}
