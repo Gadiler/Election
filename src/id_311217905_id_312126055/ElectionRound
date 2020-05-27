@@ -1,0 +1,263 @@
+package id_311217905_id_312126055;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+
+import exceptions.CitizenException;
+import id_311217905_id_312126055.Election.eMonth;
+import id_311217905_id_312126055.Party.eFaction;
+import set.Set;
+import interfaces.GraphicalUI;
+import interfaces.Messageable;
+
+public class ElectionRound { // #### Gadi_Engelsman_311217905 Yakir_Azaria_312126055
+	static Scanner s = new Scanner(System.in);
+	private static Random r = new Random();
+	private static Messageable ui = new GraphicalUI();
+	static Election<Citizen> firstRound;
+	static int numOfParties = 6; // Use for Random
+	static int minNumOfContenders = 2; // minimum contenders per party
+
+	public static void main(String[] args) throws Exception {
+//		## HARD CODED ##
+		ArrayList<Party<Citizen>> allParties = new ArrayList<Party<Citizen>>();
+		Set<Citizen> allCitizens = new Set<Citizen>();
+//		##Setting parties
+		allParties.add(new Party<Citizen>(eFaction.Center, "NewIsAlwaysBetter", "1998"));
+		allParties.add(new Party<Citizen>(eFaction.Left, "LeftIsTheNewRight", "1990"));
+		allParties.add(new Party<Citizen>(eFaction.Right, "WhyDoWeDoIt", "1980"));
+		allParties.add(new Party<Citizen>(eFaction.Center, "DemocracyNow", "1988"));
+		allParties.add(new Party<Citizen>(eFaction.Left, "GreenEarth", "2000"));
+		allParties.add(new Party<Citizen>(eFaction.Right, "Fachizem", "2003"));
+//		##Setting Voters --> There may be non-adults citizens
+		allCitizens.add(new Citizen("Ido", 100000001, "2010"));// non-adults citizens
+		allCitizens.add(new SickVoter("Noam", 100000002, "1990")); // adults citizens
+		allCitizens.add(new SickVoter("Yakir", 100000003, "1980"));// adults citizens
+		allCitizens.add(new Voter("Tomer", 100000004, "1995")); // adults citizens
+		allCitizens.add(new Voter("Itamar", 100000005, "1985")); // adults citizens
+		allCitizens.add(new Voter("Yoav", 100000006, "1997")); // adults citizens
+		allCitizens.add(new SickSoldier("Eitan", 100000007, "2000")); // Soldier #1
+		allCitizens.add(new Soldier("Daniel", 100000008, "2002")); // Soldier #2
+		allCitizens.add(new Citizen("Ben", 100000009, "1993")); // adults citizens
+		allCitizens.add(new Citizen("Hans", 100000010, "1992")); // adults citizens
+		allCitizens.add(new Voter("Raz", 100000011, "1987")); // adults citizens
+		allCitizens.add(new Citizen("Dor", 100000012, "1986")); // adults citizens
+		allCitizens.add(new Citizen("Barak", 100000013, "1989")); // adults citizens
+		allCitizens.add(new Citizen("Dorin", 100000014, "1990")); // adults citizens
+		allCitizens.add(new Citizen("Stav", 100000015, "2001")); // Soldier #3
+		allCitizens.add(new Soldier("Amir", 100000016, "2001")); // Soldier #4
+		allCitizens.add(new Citizen("Beny", 100000017, "2002")); // Soldier #5
+		allCitizens.add(new Citizen("Keren", 100000018, "1999")); // Soldier #6
+		allCitizens.add(new Citizen("David", 100000019, "1994")); // adults citizens
+		allCitizens.add(new Citizen("Victor", 100000020, "2000")); // Soldier #7
+		allCitizens.add(new SickSoldier("Tal", 100000034, "2000")); // Soldier #8
+		allCitizens.add(new Citizen("Doron", 100000035, "1990")); // adults citizens
+		allCitizens.add(new Citizen("Dekel", 100000036, "1980")); // adults citizens
+		allCitizens.add(new Citizen("Yotam", 100000037, "1995")); // adults citizens
+		allCitizens.add(new Citizen("Yiftach", 100000038, "1985")); // adults citizens
+		allCitizens.add(new Citizen("Ariel", 100000039, "1997")); // adults citizens
+		allCitizens.add(new Citizen("Liran", 100000040, "2000")); // Soldier #9
+		allCitizens.add(new Citizen("Ernest", 100000041, "2002")); // Soldier #10
+		allCitizens.add(new Citizen("Shiff", 100000042, "1993")); // adults citizens
+		allCitizens.add(new Citizen("Ella", 100000043, "1992")); // adults citizens
+		allCitizens.add(new SickVoter("Gal", 100000044, "1987")); // adults citizens
+		allCitizens.add(new SickVoter("Dean", 100000045, "1986")); // adults citizens
+		allCitizens.add(new Citizen("Bar", 100000046, "1989")); // adults citizens
+		allCitizens.add(new Citizen("Dori", 100000047, "1990")); // adults citizens
+		allCitizens.add(new Citizen("Shachar", 100000048, "2001")); // Soldier #11
+		allCitizens.add(new Citizen("Yarden", 100000049, "2001")); // Soldier #12
+		allCitizens.add(new Citizen("Ran", 100000050, "2002")); // Soldier #13
+		allCitizens.add(new Citizen("Linor", 100000051, "1999")); // Soldier #14
+		allCitizens.add(new Citizen("Davidovich", 100000052, "1994")); // adults citizens
+		allCitizens.add(new SickVoter("Victoria", 100000053, "2000")); // Soldier #15
+		allCitizens.add(new Voter("Harvey Specter", 100000060, "1984")); // adults citizens
+		allCitizens.add(new SickVoter("Donna Paulsen", 100000061, "1990")); // adults citizens
+		allCitizens.add(new Citizen("Louis Litt", 100000062, "2000")); // Soldier #16
+		allCitizens.add(new Soldier("Jessica Pearson", 100000063, "2000")); // Soldier #17
+//		##Setting contenders
+		allCitizens.add(new Contender("Barney Stinson", 100000022, "1990", allParties.get(0))); // contender #1
+		allCitizens.add(new Contender("Ted Mosby", 100000023, "1991", allParties.get(r.nextInt(numOfParties)))); // contender #2
+		allCitizens.add(new Contender("robin scherbatsky", 100000024, "1980", allParties.get(1))); // contender #3
+		allCitizens.add(new Contender("lily Aldrin", 100000025, "1987", allParties.get(r.nextInt(numOfParties)))); // contender #4
+		allCitizens.add(new Contender("Marshall Eriksen", 100000026, "1985", allParties.get(2))); // contender #5
+		allCitizens.add(new Contender("Shay", 100000027, "1978", allParties.get(r.nextInt(numOfParties)))); // contender #6
+		allCitizens.add(new Contender("Raz", 100000028, "1992", allParties.get(3))); // contender #7
+		allCitizens.add(new Contender("Arin", 100000029, "1981", allParties.get(r.nextInt(numOfParties)))); // contender #8
+		allCitizens.add(new Contender("Tom", 100000030, "1960", allParties.get(4))); // contender #9
+		allCitizens.add(new Contender("Liraz", 100000031, "1977", allParties.get(r.nextInt(numOfParties)))); // contender #10
+		allCitizens.add(new Contender("Nitzan", 100000032, "1965", allParties.get(5))); // contender #11
+		allCitizens.add(new Contender("Gadi", 100000033, "1967", allParties.get(r.nextInt(numOfParties)))); // contender #12
+		allCitizens.add(new Contender("Rachel Karen Green", 100000054, "1969", allParties.get(r.nextInt(numOfParties)))); // contender// #13
+		allCitizens.add(new Contender("Ross Eustace Geller", 100000055, "1967", allParties.get(r.nextInt(numOfParties)))); // contender// #14
+		allCitizens.add(new Contender("Chandler Muriel Bing", 100000056, "1968", allParties.get(r.nextInt(numOfParties)))); // contender// #15
+		allCitizens.add(new Contender("Phoebe Buffay-Hannigan", 100000057, "1967", allParties.get(r.nextInt(numOfParties)))); // contender #16
+		allCitizens.add(new Contender("Joey Tribbiani", 100000058, "1968", allParties.get(r.nextInt(numOfParties)))); // contender//#17
+		allCitizens.add(new Contender("Monica Geller-Bing", 100000059, "1969", allParties.get(r.nextInt(numOfParties)))); // contender//#18
+//		## HARD CODED ##
+		firstRound = new Election<Citizen>(eMonth.july, 13, allCitizens, allParties);
+
+		try {
+			int res1 = 0;
+			final int EXIT = -1;
+			while (res1 != EXIT) {
+				res1 =  Integer.parseInt(ui.getString("Hello\n" + "Please enter number to choose\n" + "Add Voter --> 1\n"
+						+ "Add Contender --> 2\n" + "Add Party --> 3\n" + "Add Ballot-Box --> 4\n"
+						+ "Start vote --> 5\n" + "Exit & Results --> -1\n"));
+
+				switch (res1) {
+
+				case 1: // Add voter
+					addVoter();
+					break;
+
+				case 2: // Add contender
+					addContender();
+					break;
+
+				case 3: // Add party
+					addParty();
+					break;
+
+				case 4: // Add Ballot-Box
+					addBallotBox();
+					break;
+
+				case 5:
+					voting();
+					break;
+
+				case EXIT:
+					((GraphicalUI) ui).showMessages(firstRound);
+					break;
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + res1);
+				}
+			}
+		} catch (CitizenException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public static void addVoter() throws Exception {
+		String nameV = ui.getString("Please enter the name of the voter: \n");
+		long idV = ui.getLong("Please enter the ID of the voter: \n");
+		String birthYearV = ui.getString("Please enter the birthYear of the voter: \n");
+		firstRound.addVoter(new Citizen(nameV, idV, birthYearV));
+		ui.showMessage(nameV + " Added successfully\n");
+	}
+
+	public static void addContender() throws Exception {
+		String nameC = ui.getString("Please enter the name of the contender: \n");
+		long idC = ui.getLong("Please enter the ID of the contender: \n");
+		String birthYearC = ui.getString("Please enter the birthYear of the contender: \n");
+		Citizen tempV = new Citizen(nameC, idC, birthYearC);
+		ui.showMessage(nameC + " Added successfully\n");
+//		NOTE: Loop for proper contender (NOT military contender)
+		while (tempV.fMilitaryVoter) {
+			ui.showMessage("Contender cannot be a soldier, set new contender!\n");
+			nameC = ui.getString("Please enter the name of the contender: \n");
+			idC = ui.getLong("Please enter the ID of the contender: \n");
+			birthYearC = ui.getString("Please enter the birthYear of the contender: \n");
+			tempV = new Citizen(nameC, idC, birthYearC);
+		}
+		ui.showMessage("Enter the name of the contender's party from the list:\n");
+		String temParty = ((GraphicalUI) ui).getString(firstRound.partiesPrinter());
+		firstRound.addContender(tempV, temParty);
+		ui.showMessage(nameC + " Added successfully into " + temParty + "\n");
+	}
+
+	public static void addParty() throws Exception {
+		String nameP = ui.getString("Please enter the name of the Party: \n");
+		eFaction faction = (eFaction) ui.getEnum("Please enter the faction of the party: \n(Left, Center, Right) \n");
+		String birthYearP = ui.getString("Please enter the party establishment year: \n");
+		Party<Citizen> tempParty = new Party<Citizen>(faction, nameP, birthYearP);
+		firstRound.addParty(tempParty);
+		ui.showMessage(nameP + " added successfully\nNow enter "+minNumOfContenders+" contenders.\n");
+//		NOTE: Loop to enter 2 contenders
+		for (int k = minNumOfContenders; k > 0; k--) {
+			String nameC1 = ui.getString("Please enter the name of the contender: \n");
+			long idC1 = ui.getLong("Please enter the ID of the contender: \n");
+			String birthYearC1 = ui.getString("Please enter the birthYear of the contender: \n");
+			Citizen tempC1 = new Contender(nameC1, idC1, birthYearC1, tempParty);
+//			NOTE: Loop for proper contender (NOT military contender)
+			while (tempC1.fMilitaryVoter) {
+				ui.showMessage("Contender cannot be a soldier, set new contender!\n");
+				nameC1 = ui.getString("Please enter the name of the contender: \n");
+				idC1 = ui.getLong("Please enter the ID of the contender: \n");
+				birthYearC1 = ui.getString("Please enter the birthYear of the contender: \n");
+				tempC1 = new Contender(nameC1, idC1, birthYearC1, tempParty);
+			}
+			firstRound.addContender(tempC1, nameP);
+			ui.showMessage(tempC1.name + " Added successfully\n");
+		}
+	}
+
+	public static void addBallotBox() throws Exception {
+		String addressBX = ui.getString("Please enter the address: \n");
+		String type = ui.getString("Please enter the type of the Ballot-Box: \n( Citizen / SickCitizen / Soldier / SickSoldier )\n");
+		switch (type) {
+			case "Citizen":
+				firstRound.addBallotCitizens(new BallotBox<Citizen>(addressBX));
+				break;
+			case "SickCitizen":
+				firstRound.addBallotSickCitizens(new BallotBox<SickVoter>(addressBX));
+				break;
+			case "Soldier":
+				firstRound.addBallotSoldiers(new BallotBox<Soldier>(addressBX));
+				break;
+			case "SickSoldier":
+				firstRound.addBallotSickSoldiers(new BallotBox<SickSoldier>(addressBX));
+				break;
+			default:
+				throw new IllegalArgumentException("Unexpected value: " + type);
+		}
+		ui.showMessage("The Ballot-Box at the address " + addressBX + " added successfully\n");
+	}
+
+	public static void voting() throws Exception {
+		for (int i = 0; i < firstRound.allCitizens.size(); i++) {
+			if (firstRound.allCitizens.get(i) != null) {
+				System.out.println("Hello " + firstRound.allCitizens.get(i).name + " do you want to vote? (Y/N)");
+
+//				## Manual initialized {
+//					String res = s.nextLine();
+//				}##
+
+//				## Auto initialized	{		
+				String res = "y";
+//				}##
+				if (res.equals("y") || res.equals("Y")) {
+					for (int j = 0; j < Election.allParties.size(); j++) {
+						if (Election.allParties.get(j) != null) {
+							System.out.println((j + 1) + "] " + Election.allParties.get(j).toString() + "\n");
+						}
+					}
+					System.out.println(
+							"Pick your party by write the index of the party and the index of your favorite contender: (<party>*space*<contender>)\n");
+
+//					//## Manual initialized { --> turn on the clean buffer!!!
+//						int partyIndex = s.nextInt();
+//						int contenderIndex = s.nextInt();
+//							while (partyIndex > numOfParties || contenderIndex > minNumOfContenders) {
+//								System.out.println("Wrong input!\nPick your party by write the index of the party and the index of your favorite contender: (<party>*space*<contender>)\\n");
+//								partyIndex = s.nextInt();
+//								contenderIndex = s.nextInt();
+//							}
+//					//}##
+
+//					//## Random initialized {
+					int partyIndex = (int) r.nextInt(Election.allParties.size()) + 1;
+					int contenderIndex = (int) r.nextInt(Election.allParties.get(partyIndex - 1).numOfContenders)+ 1;
+//					//}##
+					if (firstRound.allCitizens.get(i) != null) {
+						firstRound.makeAVote((Voter) firstRound.allCitizens.get(i), partyIndex, contenderIndex);
+					}
+//					s.nextLine(); //### Clean Buffer ### <-<-<-<-<-<-<-<-<-
+				}
+			}
+		}
+	}
+}
