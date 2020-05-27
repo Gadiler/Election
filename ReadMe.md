@@ -1,5 +1,5 @@
 # Election
 
-Application to simulate ElectionDay.
+Simulate an election app
 
-This code is under development.
+This code is still under development.
