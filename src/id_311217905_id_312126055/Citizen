@@ -1,0 +1,134 @@
+package id_311217905_id_312126055;
+
+import java.util.Random;
+
+import exceptions.SetIDException;
+import interfaces.Sickable;
+
+public class Citizen implements Cloneable {
+	protected Random r = new Random();
+	protected final static int LIMITED_YEAR = 2002;
+	protected final static int INSULATION_TIME = 14;
+	protected String name;
+	protected long id;
+	protected String birthYear;
+	protected boolean adult = true;
+	protected Boolean fInsulation;
+	protected int dayCount4Insulation;
+	protected Boolean fMilitaryVoter = false;
+	protected BallotBox<? extends Citizen> myBallotBox;
+	protected Boolean fProtectiveSuit;
+
+	public Citizen(String name, long id, String birthYear) throws Exception {
+		this.name = name;
+		setId(id);
+		setBirthYear(birthYear);
+		sickFunc();
+	}
+
+	private void setId(long id) throws Exception {
+		if (!(id < 1000000000 && id >= 100000000)) { // Lowest & highest id.
+			throw new SetIDException(
+					"setIdException: " + id + " Valid number!\\nClass: " + getClass().getSimpleName() + " line: 32");
+		}
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void sickFunc() {
+		if (this instanceof Sickable) {
+			this.fInsulation = true;
+		} else {
+			this.fInsulation = r.nextBoolean();
+		}
+		if (fInsulation) {
+			this.dayCount4Insulation = r.nextInt(INSULATION_TIME);
+			this.fProtectiveSuit = true;
+		}
+	}
+
+	public int insulationTime() {
+		return this.dayCount4Insulation;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getMyBXAddress() {
+		return myBallotBox.address;
+	}
+
+	private void setBirthYear(String birthYear) throws Exception {
+		int year = Integer.parseInt(birthYear);
+		if (year > LIMITED_YEAR) {
+			adult = false;
+//			throw new AddCitizenException();
+		}
+		if (year >= 1999 && year <= 2002) {
+			fMilitaryVoter = true;
+		}
+		this.birthYear = birthYear;
+	}
+
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
+	@Override
+	public String toString() {
+		return name + ", " + id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Citizen other = (Citizen) obj;
+		if (adult != other.adult)
+			return false;
+		if (birthYear == null) {
+			if (other.birthYear != null)
+				return false;
+		} else if (!birthYear.equals(other.birthYear))
+			return false;
+		if (dayCount4Insulation != other.dayCount4Insulation)
+			return false;
+		if (fInsulation == null) {
+			if (other.fInsulation != null)
+				return false;
+		} else if (!fInsulation.equals(other.fInsulation))
+			return false;
+		if (fMilitaryVoter == null) {
+			if (other.fMilitaryVoter != null)
+				return false;
+		} else if (!fMilitaryVoter.equals(other.fMilitaryVoter))
+			return false;
+		if (fProtectiveSuit == null) {
+			if (other.fProtectiveSuit != null)
+				return false;
+		} else if (!fProtectiveSuit.equals(other.fProtectiveSuit))
+			return false;
+		if (id != other.id)
+			return false;
+		if (myBallotBox == null) {
+			if (other.myBallotBox != null)
+				return false;
+		} else if (!myBallotBox.equals(other.myBallotBox))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+}
