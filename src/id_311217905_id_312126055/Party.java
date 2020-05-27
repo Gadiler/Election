@@ -1,33 +1,37 @@
 package id_311217905_id_312126055;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Comparator;
 
-import comparator.BubbleSort;
-import comparator.ComparContendersByNumOfVotes;
-import comparator.ComparVotersByID;
+import exceptions.AddContenderException;
+import exceptions.VoteException;
+import interfaces.BubbleSort;
+import interfaces.ComparContendersByNumOfVotes;
+import interfaces.ComparVotersByID;
 
-public class Party implements Comparator<Contender>{
-	public enum eFaction {Left, Center, Right};
+public class Party<T extends Citizen> implements Comparator<T> {
+	public enum eFaction {
+		Left, Center, Right
+	};
 
 	protected eFaction faction;
 	protected String nameOfParty;
 	protected String seniority;
-	protected Contender[] allContenders;
-	protected Voter[] OurVoters;
 	protected int numOfContenders;
 	protected int numOfVotes;
+	protected ArrayList<T> ourVoters;
+	protected ArrayList<T> allContenders;
 
-	public Party(eFaction faction, String nameOfParty, String seniority, int numOfContenders, int numOfVoters) {
+	public Party(eFaction faction, String nameOfParty, String seniority) {
 		this.faction = faction;
 		this.nameOfParty = nameOfParty;
 		this.seniority = seniority;
-		this.allContenders = new Contender[numOfContenders];
-		this.OurVoters = new Voter[numOfVoters];
+		allContenders = new ArrayList<T>();
+		ourVoters = new ArrayList<T>();
 	}
 
-	public Party(Party party) {
-		this(party.faction, party.nameOfParty, party.seniority, party.allContenders.length, party.OurVoters.length); 
+	public Party(Party<T> party) {
+		this(party.faction, party.nameOfParty, party.seniority);
 	}
 
 	public String getNameOfParty() {
@@ -38,68 +42,59 @@ public class Party implements Comparator<Contender>{
 		return numOfVotes;
 	}
 
-	public boolean addContender(Contender newContender) throws Exception {
+	public boolean addContender(T newContender) throws Exception {
 //		######EXCEPTION!!!!
-		for (int i = 0; i < OurVoters.length; i++) {
-			if (OurVoters[i] != null) {
-				if (newContender.getId() == OurVoters[i].getId()) {		 			  
-					throw new Exception("addContnder Excption: Allready exist"); 
+		for (int i = 0; i < ourVoters.size(); i++) {
+			if (ourVoters.get(i) != null) {
+				if (newContender.getId() == ourVoters.get(i).getId()) {
+					throw new AddContenderException("AddContenderException: " + ourVoters.get(i)
+							+ " Already exist\nClass: " + getClass().getSimpleName() + " line: 48");
 				}
 			}
 		}
 //		######EXCEPTION!!!!
-		if (numOfContenders == allContenders.length) {
-			Contender[] tempAllContenders = new Contender[allContenders.length+1];
-			for (int i = 0; i < allContenders.length; i++) {
-				tempAllContenders[i] = allContenders[i];
-			}
-			allContenders = new Contender[allContenders.length+1];
-			for (int i = 0; i < numOfContenders; i++) {
-			this.allContenders[i] = tempAllContenders[i];
-			}allContenders[numOfContenders++] = new Contender(newContender);
-			return true;
-		}
-		this.allContenders[numOfContenders++] = new Contender(newContender);
+		allContenders.add(newContender);
+		numOfContenders++;
 		return true;
 	}
 
-	public void makeAVoteForOurParty(Voter voter, int contenderIndex) throws Exception {
-		for (int i = 0; i < OurVoters.length; i++) {
-			if (voter.equals(OurVoters[i])) {
-				throw new Exception("makeAVoteForOurParty Exception: "+OurVoters[i].name+" All Ready Voted!");
+	public void makeAVoteForOurParty(T voter, int contenderIndex) throws Exception {
+		for (int i = 0; i < ourVoters.size(); i++) {
+//		######EXCEPTION!!!!
+			if (voter.getId() == ourVoters.get(i).getId()) {
+				throw new VoteException("VoteException: " + ourVoters.get(i).name + " All Ready Voted!\nClass: "
+						+ getClass() + "line: 62");
 			}
 		}
-		OurVoters[numOfVotes++] = voter.clone();
-		allContenders[contenderIndex - 1].makeAVote();
+//		######EXCEPTION!!!!
+		ourVoters.add(voter);
+		((Contender) allContenders.get(contenderIndex - 1)).makeAVote();
+		numOfVotes++;
 		System.out.println("Thank you for voting us!\n");
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder("Party details: \n");
-		sb.append("###Party name: " + nameOfParty + ", since: " + seniority + "\n");
-		sb.append(ourContendersToString());
-		return sb.toString();
 	}
 
 	public String ourContendersToString() {
 		BubbleSort.bubbleSort(allContenders, new ComparVotersByID());
 		BubbleSort.bubbleSort(allContenders, new ComparContendersByNumOfVotes());
 		StringBuilder sb = new StringBuilder("The Contenders are: \n");
-		for (int i = 0; i < numOfContenders; i++) {
-			sb.append((i + 1) + "] " + allContenders[i].toString() + "\n");
+		for (int i = 0; i < allContenders.size(); i++) {
+			sb.append((i + 1) + "] " + allContenders.get(i).toString() + ", numOfVotes: "
+					+ ((Contender) allContenders.get(i)).getNumOfVotesForContender() + "\n\n");
 		}
-		return sb.toString() + "The number of contenders is: " + numOfContenders + "\n";
+		return sb.toString() + "The number of contenders is: " + allContenders.size() + "\n";
 	}
 
-	public String ourVotesToString() {
-		StringBuilder sb = new StringBuilder("The final count for party: " + nameOfParty + " is: **" + numOfVotes + "**" + "\n");
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(
+				"The final count for party: " + nameOfParty + " is: **" + ourVoters.size() + "**" + "\n");
 		sb.append(ourContendersToString());
 		sb.append("\nThe list of our voters: \n");
-		for (int j = 0; j < numOfVotes; j++) {
-			sb.append((j + 1) + ") " + OurVoters[j].name +", " +OurVoters[j].id+  "\n");
+		BubbleSort.bubbleSort(ourVoters, new ComparVotersByID());
+		for (int i = 0; i < ourVoters.size(); i++) {
+			sb.append((i + 1) + ") " + ourVoters.get(i).toString() + "\n");
 		}
-		return sb.toString()+ "\n";
+		return sb.toString() + "\n";
 	}
 
 	@Override
@@ -110,10 +105,8 @@ public class Party implements Comparator<Contender>{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Party other = (Party) obj;
-		if (!Arrays.equals(OurVoters, other.OurVoters))
-			return false;
-		if (!Arrays.equals(allContenders, other.allContenders))
+		Party<?> other = (Party<?>) obj;
+		if (!allContenders.equals(other.allContenders))
 			return false;
 		if (faction != other.faction)
 			return false;
@@ -135,18 +128,12 @@ public class Party implements Comparator<Contender>{
 	}
 
 	@Override
-	public int compare(Contender o1, Contender o2) {
-		if (o1.getNumOfVotesForContender() < o2.getNumOfVotesForContender()) {
+	public int compare(T o1, T o2) {
+		if (o1.id < o2.id) {
 			return -1;
-		}else if (o1.getNumOfVotesForContender() > o2.getNumOfVotesForContender()) {
+		} else if (o1.id > o2.id) {
 			return 1;
-		}else
-		return 0;
+		} else
+			return 0;
 	}
-
-
-	
-	
-	
-
 }
