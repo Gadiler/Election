@@ -1,0 +1,33 @@
+package id_311217905_id_312126055;
+
+public class CoronaMilitaryBallotBox<T extends Soldier> extends MilitaryBallotBox<T> {
+
+	public CoronaMilitaryBallotBox(String address) {
+		super(address);
+	}
+
+	public CoronaMilitaryBallotBox(MilitaryBallotBox<T> militaryBallotBox) {
+		super(militaryBallotBox);
+	}
+
+	public void setAVoteInCoronaMilitaryBallotBox(Voter voter, int indexOfParty, int contenderIndex) throws Exception {
+		if (voter.fMilitaryVoter && voter.fMilitaryVoter) {
+			Election.allParties.get(indexOfParty - 1).makeAVoteForOurParty(voter, contenderIndex);
+			numOfVoters++;
+		} else {
+			throw new Exception(
+					"setAVoteInCoronaMilitaryBallotBox Exception: The voter birth year is:" + voter.birthYear);
+		}
+
+	}
+
+	public void setCoronaMilitaryVoter(T voter) {
+		ourVoters.add(voter);
+		numOfVoters++;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Type of Ballot-Box: Corona Military Ballot-Box\n";
+	}
+}
